@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 
@@ -6,8 +6,14 @@ function App() {
     const [longUrl, setLongUrl] = useState('');
     const [shortUrl, setShortUrl] = useState('');
 
+    useEffect(() => {
+        console.log('Component mounted');
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        console.log('Form submitted with URL:', longUrl);
 
         const urlPattern = new RegExp('^(https?:\\/\\/)?'+
             '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|(\\d{1,3}\\.){3}\\d{1,3})'+
@@ -23,6 +29,7 @@ function App() {
 
         try {
             const response = await axios.post('/api/shorten', { longUrl });
+            console.log('Response from API:', response.data);
             setShortUrl(response.data.shortUrl);
         } catch (error) {
             console.error('There was an error shortening the URL!', error);
